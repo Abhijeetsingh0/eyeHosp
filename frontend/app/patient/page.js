@@ -47,6 +47,19 @@ const Patient = () => {
         setQuery(e.target.value);
     };
 
+    const handleReload = () =>{
+        axios.get('http://localhost:8000/patient/')
+        .then(function (response) {
+            setPatients(response.data.body);
+        })
+        .catch(function (error) {
+            setError(error);
+        })
+        .finally(() => {
+            setLoading(false);
+        });
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         if (searchType === "contact") {
@@ -71,10 +84,9 @@ const Patient = () => {
                 })
                 .finally(() => {
                     setLoading(false);
-                    console.log("l1")
                 });
         } else {
-            axios.get('http://localhost:8000/patient')
+            axios.get('http://localhost:8000/patient/')
                 .then(function (response) {
                     setPatients(response.data.body);
                 })
@@ -83,13 +95,12 @@ const Patient = () => {
                 })
                 .finally(() => {
                     setLoading(false);
-                    console.log("l2")
                 });
         }
     };
 
     // Check if both searchType and query are filled
-    const isSearchActive = searchType && query;
+    const isSearchActive = searchType || query;
 
     return (
         <div>
@@ -146,17 +157,20 @@ const Patient = () => {
                     />
                     <button
                         type="submit"
-                        className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 ${!isSearchActive ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        className={`absolute left-3 w-12 top-1/2 transform -translate-y-1/2 text-gray-500 ${!isSearchActive ? 'opacity-50 cursor-not-allowed' : ''}`}
                         disabled={!isSearchActive} // Disable button if searchType or query is empty
                     >
                         <FaSearch className="w-5 h-5" />
                     </button>
                 </form>
+                <button onClick={()=>{
+                    handleReload()
+                }} className="bg-gray-500 text-white font-semibold py-2 px-4 rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50">reload</button>
             </div>
 
             <div className="mt-4">
                 <ul>
-                    {patients.map((patient, index) => (
+                    {patients && patients.map((patient, index) => (
                         <div
                             key={index}
                             onClick={() => router.push("/patient/" + patient._id)}

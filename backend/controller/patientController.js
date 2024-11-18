@@ -51,7 +51,7 @@ module.exports.getPatientByUid = async (req, res)=>{
     const response = {}
     try{
         const {uid} = req.params
-        const Patient = await patientService.getPatientByUid(uid)
+        const Patient = await patientService.getPatientById(uid)
         response.status = 200
         response.body = Patient
     }catch(err){
@@ -73,6 +73,24 @@ module.exports.getPatientByName = async (req, res)=>{
         response.body = Patient
     }catch(err){
         console.log("Somthing went wrong in Patient controller while getPatientByName :",err)
+        response.status = 400
+        response.message = err.message
+        response.body = {}
+    }
+    return res.status(response.status).send(response)
+}
+
+
+module.exports.getPatientByContact = async (req, res)=>{
+    const response = {}
+    try{
+        const {contact} = req.params
+        const Contact = String(contact).toLowerCase()
+        const Patient = await patientService.getPatientByContact(Contact)
+        response.status = 200
+        response.body = Patient
+    }catch(err){
+        console.log("Somthing went wrong in Patient controller while getPatientByContact :",err)
         response.status = 400
         response.message = err.message
         response.body = {}

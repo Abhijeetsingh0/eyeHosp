@@ -5,7 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-black text-white">
           <div style={{ display: 'flex' }}>
             <Sidebar />
           </div>
